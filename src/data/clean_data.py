@@ -16,6 +16,7 @@ def load_data(batch_size=32, val_ratio=0.2, random_seed=42):
     5. Split into training and validation sets
     6. Convert to PyTorch tensors and return DataLoaders
     """
+
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
     first_dataset_path  = os.path.join(base_dir, "data", "raw", "diabetes.csv")
@@ -26,7 +27,10 @@ def load_data(batch_size=32, val_ratio=0.2, random_seed=42):
 
     # Fill missing columns in the first dataset
     for col in ["gender", "hypertension", "heart_disease", "smoking_history", "HbA1c_level"]:
-        first_dataset[col] = 0 if col != "smoking_history" else "never"
+        if col != "smoking_history":
+            first_dataset[col] = 0
+        else:
+            first_dataset[col] = "never"
     first_dataset["blood_glucose_level"] = first_dataset["Glucose"]
 
     # Fill missing columns in the second dataset
@@ -44,38 +48,35 @@ def load_data(batch_size=32, val_ratio=0.2, random_seed=42):
         combined_df[col] = combined_df[col].replace(0, np.nan)
         combined_df[col] = combined_df[col].fillna(combined_df[col].median())
 
-    # Encode categorical features
-    combined_df['gender'] = combined_df['gender'].map({'Male':1, 'Female':0, 0:0})
+    # Encode gender
+    combined_df['gender'] = combined_df['gender'].map({'Male': 1, 'Female': 0})
+    combined_df['gender'] = combined_df['gender'].fillna(0)
 
-    # Handle smoking_history
+    # Encode smoking history
     combined_df['smoking_history'] = combined_df['smoking_history'].replace('No Info', 'never')
     combined_df = pd.get_dummies(combined_df, columns=['smoking_history'], drop_first=False)
 
+    # Fill any remaining NaNs
+    combined_df = combined_df.fillna(0)
+
     # Define numeric and categorical columns
     numeric_cols = [
-        "Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin",
-        "BMI", "DiabetesPedigreeFunction", "Age", "HbA1c_level", "blood_glucose_level"
+        "Pregnancies", "blood_glucose_level", "BloodPressure", "SkinThickness", "Insulin",
+        "BMI", "DiabetesPedigreeFunction", "Age", "HbA1c_level"
     ]
     categorical_cols = ["gender", "hypertension", "heart_disease"]
-    smoking_cols = [col for col in combined_df.columns if "smoking_history_" in col]
+    smoking_cols = ["smoking_history_never", "smoking_history_former", "smoking_history_current"]
 
-    # Scale numeric features only
-    X_numeric = combined_df[numeric_cols].values.astype(float)
-    mean = X_numeric.mean(axis=0)
-    std = X_numeric.std(axis=0)
-    std[std == 0] = 1
-    X_numeric_scaled = (X_numeric - mean) / std
-    X_numeric_scaled = np.clip(X_numeric_scaled, -10, 10)
+    feature_cols = numeric_cols + categorical_cols + smoking_cols
+    X = combined_df[feature_cols].astype(np.float32).values  # convert to NumPy array
+    y = combined_df["Outcome"].fillna(combined_df["diabetes"]).astype(int).values
 
-    # Concatenate scaled numeric + categorical + one-hot smoking features
-    X = np.concatenate([
-        X_numeric_scaled,
-        combined_df[categorical_cols].values.astype(float),
-        combined_df[smoking_cols].values.astype(float)
-    ], axis=1)
-
-    # Labels
-    y = combined_df["Outcome"].fillna(combined_df["diabetes"]).values.astype(int)
+    # Manual standardization
+    mean = X.mean(axis=0)
+    std  = X.std(axis=0)
+    std[std == 0] = 1  # prevent division by zero
+    X_scaled = (X - mean) / std
+    X_scaled = np.clip(X_scaled, -10, 10)  # clip extreme values
 
     # Save mean and std for inference
     scaler_dir = os.path.join(base_dir, "saved_model")
@@ -85,13 +86,13 @@ def load_data(batch_size=32, val_ratio=0.2, random_seed=42):
 
     # Shuffle and split
     np.random.seed(random_seed)
-    indices = np.arange(len(X))
+    indices = np.arange(len(X_scaled))
     np.random.shuffle(indices)
-    split_idx = int(len(X) * (1 - val_ratio))
+    split_idx = int(len(X_scaled) * (1 - val_ratio))
     train_idx, val_idx = indices[:split_idx], indices[split_idx:]
 
-    X_train, y_train = X[train_idx], y[train_idx]
-    X_val, y_val     = X[val_idx], y[val_idx]
+    X_train, y_train = X_scaled[train_idx], y[train_idx]
+    X_val, y_val     = X_scaled[val_idx], y[val_idx]
 
     # Convert to PyTorch tensors
     X_train = torch.tensor(X_train, dtype=torch.float32)

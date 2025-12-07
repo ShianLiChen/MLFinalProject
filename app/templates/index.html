@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diabetes Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function togglePregnancies() {
+            const gender = document.getElementById("gender").value;
+            document.getElementById("pregnanciesDiv").style.display = gender === "Female" ? "block" : "none";
+        }
+    </script>
+</head>
+<body class="p-4">
+<div class="container">
+    <h1 class="mb-4">Diabetes Predictor</h1>
+
+    <p class="text-muted"><strong>Note:</strong> The default values in the form are based on average values. Feel free to change them to your inputs!</p>
+
+    <form method="POST">
+
+        <!-- Demographics -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Demographics</strong></h5>
+
+                <div class="mb-3">
+                    <label><strong>Gender</strong></label><br>
+                    <select class="form-select mt-1" id="gender" name="gender" onchange="togglePregnancies()">
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" id="pregnanciesDiv" style="display:none;">
+                    <label><strong>Number of Pregnancies</strong></label><br>
+                    <input type="number" class="form-control mt-1" name="Pregnancies" min="0" value="{{ defaults['Pregnancies']|int }}">
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Age</strong></label><br>
+                    <input type="number" class="form-control mt-1" name="Age" min="0" value="{{ defaults['Age']|int }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- Body Measurements -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Body Measurements</strong></h5>
+
+                <div class="mb-3">
+                    <label><strong>BMI</strong></label><br>
+                    <small class="text-muted">Body Mass Index (weight in kg / height in m²).</small>
+                    <input type="number" class="form-control mt-1" name="BMI" step="0.1" min="0" value="{{ defaults['BMI']|round(1) }}">
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Blood Pressure</strong></label><br>
+                    <small class="text-muted">Diastolic blood pressure in mmHg.</small>
+                    <input type="number" class="form-control mt-1" name="BloodPressure" step="0.1" min="0" value="{{ defaults['BloodPressure']|round(1) }}">
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Skin Thickness</strong></label><br>
+                    <small class="text-muted">Triceps skin fold thickness in mm.</small>
+                    <input type="number" class="form-control mt-1" name="SkinThickness" step="0.1" min="0" value="{{ defaults['SkinThickness']|round(1) }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- Lab Measurements -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Lab Measurements</strong></h5>
+
+                <div class="mb-3">
+                    <label><strong>Insulin</strong></label><br>
+                    <small class="text-muted">2-Hour serum insulin in µU/ml.</small>
+                    <input type="number" class="form-control mt-1" name="Insulin" step="0.1" min="0" value="{{ defaults['Insulin']|round(1) }}">
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Blood Glucose Level</strong></label><br>
+                    <small class="text-muted">Plasma glucose concentration 2 hours after an oral glucose test (mg/dL).</small>
+                    <input type="number" class="form-control mt-1" name="blood_glucose_level" step="0.1" min="0" value="{{ defaults['blood_glucose_level']|round(1) }}">
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>HbA1c Level</strong></label><br>
+                    <small class="text-muted">Glycated hemoglobin level (%).</small>
+                    <input type="number" class="form-control mt-1" name="HbA1c_level" step="0.1" min="0" value="{{ defaults['HbA1c_level']|round(1) }}">
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Diabetes Pedigree Function</strong></label><br>
+                    <small class="text-muted">Function that scores likelihood of diabetes based on family history.</small>
+                    <input type="number" class="form-control mt-1" name="DiabetesPedigreeFunction" step="0.01" min="0" value="{{ defaults['DiabetesPedigreeFunction']|round(2) }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical History -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Medical History</strong></h5>
+
+                <div class="mb-3">
+                    <label><strong>Heart Disease</strong></label><br>
+                    <small class="text-muted">Do you have a history of heart disease?</small>
+                    <select class="form-select mt-1" name="heart_disease">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Hypertension</strong></label><br>
+                    <small class="text-muted">Do you have a history of high blood pressure?</small>
+                    <select class="form-select mt-1" name="hypertension">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Lifestyle</strong></h5>
+
+                <div class="mb-3">
+                    <label><strong>Smoking</strong></label><br>
+                    <small class="text-muted">What is your current smoking status?</small>
+                    <select class="form-select mt-1" name="smoking">
+                        <option value="never">Never</option>
+                        <option value="former">Former</option>
+                        <option value="current">Current</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Predict</button>
+    </form>
+
+    {% if result is not none %}
+        <div class="mt-4 alert alert-info">
+            Prediction: <strong>{{ 'Diabetic' if result == 1 else 'Non-diabetic' }}</strong><br>
+            Probability: <strong>{{ (prob*100)|round(2) }}%</strong><br>
+            <em>The model predicts the person is {{ 'diabetic' if result == 1 else 'non-diabetic' }}, and it is {{ (prob*100)|round(2) }}% confident in this prediction.</em>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

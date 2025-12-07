@@ -47,7 +47,6 @@ class DiabetesModel(L.LightningModule):
         x, y = batch
         logits = self(x)
         loss = F.cross_entropy(logits, y)
-        print(f"Validation loss batch {batch_idx}: {loss.item()}")
 
         preds = torch.argmax(logits, dim=1)
         acc = self.val_acc(preds, y)
