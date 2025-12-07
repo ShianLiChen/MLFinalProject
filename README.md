@@ -15,6 +15,9 @@ Early detection of diabetes is crucial as it allows for the initiation of long-t
 ## Data Processing:
 The two datasets were merged after comparing and matching shared feature column names. Missing values were handled by substituting median values into the missing columns allowing for maintenance of a large sample size. In order to help with model functionality, continuous features were also standardized and categorical fields were encoded to numerical representations.
 
+# Deployment:
+The trained PyTorch model has been deployed through a web application built using Flask, python and Bootstrap. Users are presented with a web form, upon application load, where they can enter demographic, physical, lab, and lifestyle information. Once the form is submitted, the model returns both a diabetes prediction and confidence level. The application handles the preprocessing of the user's input including normalization of continuous values and numerical encoding of categorical variables. The data is then sent along with the feature scaling values (`mean.npy` and `scale.npy`) to the trained model (`model.pt`), where the prediction is generated. This Flask application demonstrates how the model can be integrated into a web form application with a user-friendly user interface and removes the need for the user to train the model.
+
 # Running the Application:
 **Architecture:** Flask, Python, Pytorch, Lightning, Bootstrap, HTML, JS
 1. Clone the GitHub repo to your local drive
