@@ -38,6 +38,7 @@ During the process of creating both the models for section 1 and 2 a lot of new 
 
 # Deployment:
 **Architecture:** Flask, Python, Pytorch, Lightning, Bootstrap, HTML, JS
+
 The trained PyTorch models have been deployed through a web application built using Flask, python and Bootstrap. Upon application load, users are presented with a web form for predicting diabetic diagnosis, where they can enter demographic, physical, lab, and lifestyle information. Once the form is submitted, the model returns both a diabetes prediction and confidence level. The application handles the preprocessing of the user's input including normalization of continuous values and numerical encoding of categorical variables. The data is then sent along with the feature scaling values (`mean_dgg.npy` and `scale_dgg.npy`) to the trained model (`model_dgg.pt`), where the diabetes diagnosis prediction is generated. 
 
 The user can also access the insulin prediction page through the top navigation bar. On this page users will be required to enter 4 inputs: amount of carbohydrates eaten, current blood glucose level, target blood glucose level and the current time of day. These fields are by default populated with default average values. Once the form is submitted, the data is preprocessed to represent the time as part of a cyclical feature and is sent to the stored trained model (`model_idg.pt`), where the insulin dosage prediction is generated. 
