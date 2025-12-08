@@ -9,7 +9,7 @@ import os
 
 # This method adds a new column for the average blood sugar level based on the month.
 # My thinking is this would be useful so the model would see the target glucose level changing slightly.
-# If we set this value to the target clucose, rather than the model only ever seeing the same number.
+# If we set this value to the target glucose, rather than the model only ever seeing the same number.
 def create_target_gc_df(df: pd.DataFrame) -> pd.DataFrame:
 
     df['year_month'] = df['dateTime'].dt.to_period('M')  # e.g., 2020-08

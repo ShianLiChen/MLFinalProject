@@ -53,6 +53,7 @@ def preprocess_insulin_input(netCarbs, bloodGlucose, targetGlucose, hour):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    """Route for loading the diabetic diagnosis prediction page"""
     result = None
     prob = None
     if request.method == "POST":
@@ -87,7 +88,7 @@ def index():
 
 @app.route("/insulin", methods=["GET", "POST"])
 def insulin_predictor():
-    """Insulin dose predictor route."""
+    """Route for loading the insulin dosage predictor"""
     result = None
     if request.method == "POST":
         netCarbs = float(request.form.get("netCarbs", INSULIN_DEFAULTS["netCarbs"]))
