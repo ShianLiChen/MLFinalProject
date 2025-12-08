@@ -32,8 +32,8 @@ insulin_model.eval()
 
 INSULIN_DEFAULTS = {
     "netCarbs": 50.0,
-    "bloodGlucose": 120.0,
-    "targetGlucose": 100.0,
+    "bloodGlucose": 8.0,
+    "targetGlucose": 6.0,
     "hour": 12
 }
 
