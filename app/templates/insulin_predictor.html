@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insulin Dose Predictor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Health AI</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="/">Diabetes Predictor</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/insulin">Insulin Predictor</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="mb-4">Insulin Dose Predictor</h1>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label><strong>Carbs Eaten (g)</strong></label>
+            <input type="number" class="form-control" name="netCarbs" step="0.1" min="0" value="{{ defaults.netCarbs }}">
+        </div>
+        <div class="mb-3">
+            <label><strong>Current Blood Glucose (mg/dL)</strong></label>
+            <input type="number" class="form-control" name="bloodGlucose" step="0.1" min="0" value="{{ defaults.bloodGlucose }}">
+        </div>
+        <div class="mb-3">
+            <label><strong>Target Blood Glucose (mg/dL)</strong></label>
+            <input type="number" class="form-control" name="targetGlucose" step="0.1" min="0" value="{{ defaults.targetGlucose }}">
+        </div>
+        <div class="mb-3">
+            <label><strong>Time of Day (Hour 0-23)</strong></label>
+            <input type="number" class="form-control" name="hour" min="0" max="23" value="{{ defaults.hour }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Predict Insulin Dose</button>
+    </form>
+
+    {% if result is not none %}
+        <div class="mt-4 alert alert-info">
+            Predicted Insulin Dose: <strong>{{ result|round(2) }} units</strong>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

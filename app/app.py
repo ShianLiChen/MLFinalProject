@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from model_utils import predict_diabetes
 import numpy as np
 import os
+from src.model.model_idg import InsulinModule, InsulinDataset
+import torch
 
 app = Flask(__name__)
 
@@ -21,6 +23,33 @@ FEATURE_ORDER = [
 
 # Create a dict of defaults for numeric fields
 NUMERIC_DEFAULTS = dict(zip(FEATURE_ORDER[:9], mean[:9]))
+
+# Setup insulin predictor model
+INSULIN_MODEL_PATH = os.path.join(BASE_DIR, "..", "saved_model", "model_idg.pt")
+insulin_model = InsulinModule()
+insulin_model.load_state_dict(torch.load(INSULIN_MODEL_PATH, map_location="cpu"))
+insulin_model.eval()
+
+INSULIN_DEFAULTS = {
+    "netCarbs": 50.0,
+    "bloodGlucose": 120.0,
+    "targetGlucose": 100.0,
+    "hour": 12
+}
+
+def preprocess_insulin_input(netCarbs, bloodGlucose, targetGlucose, hour):
+    """Preprocess input for InsulinModule."""
+    hour_sin = np.sin(2 * np.pi * hour / 24)
+    hour_cos = np.cos(2 * np.pi * hour / 24)
+    batch_dict = {
+        "hour_sin": torch.tensor([[hour_sin]], dtype=torch.float32),
+        "hour_cos": torch.tensor([[hour_cos]], dtype=torch.float32),
+        "netCarbs": torch.tensor([[netCarbs]], dtype=torch.float32),
+        "bloodGlucose": torch.tensor([[bloodGlucose]], dtype=torch.float32),
+        "targetGlucose": torch.tensor([[targetGlucose]], dtype=torch.float32)
+    }
+    return batch_dict
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -55,6 +84,22 @@ def index():
         result, prob = predict_diabetes(user_input)
 
     return render_template("index.html", result=result, prob=prob, defaults=NUMERIC_DEFAULTS)
+
+@app.route("/insulin", methods=["GET", "POST"])
+def insulin_predictor():
+    """Insulin dose predictor route."""
+    result = None
+    if request.method == "POST":
+        netCarbs = float(request.form.get("netCarbs", INSULIN_DEFAULTS["netCarbs"]))
+        bloodGlucose = float(request.form.get("bloodGlucose", INSULIN_DEFAULTS["bloodGlucose"]))
+        targetGlucose = float(request.form.get("targetGlucose", INSULIN_DEFAULTS["targetGlucose"]))
+        hour = int(request.form.get("hour", INSULIN_DEFAULTS["hour"]))
+
+        batch_dict = preprocess_insulin_input(netCarbs, bloodGlucose, targetGlucose, hour)
+        with torch.no_grad():
+            result = insulin_model(batch_dict).item()
+
+    return render_template("insulin_predictor.html", result=result, defaults=INSULIN_DEFAULTS)
 
 if __name__ == "__main__":
     app.run(debug=True)
