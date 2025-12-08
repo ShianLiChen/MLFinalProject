@@ -11,6 +11,15 @@ from torchmetrics import Accuracy
 from torchinfo import summary
 
 class DiabetesModel(L.LightningModule):
+    """
+    DiabetesModel is a neural network that predicts whether a patient is 
+    diabetic or non-diabetic based on health-related input features.
+    
+    It uses several fully connected layers with ReLU activations and dropout 
+    to reduce overfitting. The model outputs one of two classes:
+        0 — non-diabetic
+        1 — diabetic
+    """
     def __init__(self, input_size: int):
         super().__init__()
         self.net = nn.Sequential(

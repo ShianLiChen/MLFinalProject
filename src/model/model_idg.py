@@ -152,5 +152,6 @@ class InsulinModule(LightningModule):
         batch_dict, target = batch
         preds = self.forward(batch_dict)
         loss = self.loss(preds, target)
+        # Allows for Early Stopping to track val_loss value
         self.log("val_loss", loss, prog_bar=True, on_step=False, on_epoch=True)
         return loss
