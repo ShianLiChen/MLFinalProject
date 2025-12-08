@@ -1,5 +1,5 @@
 # CSCI 4050 - ML Final Project (ID: Group 16)
-## By: Li Chen (100813628) &
+## By: Li Chen (100813628) & Ryan (100824151)
 
 # Sections:
 1. Files whose names end in `*_dgg` represent the **Diabetes General Guess** functionality that uses a Multi-Layer Perceptron (MLP) and 2 multi-participant diabetic information datasets to predict whether a user has diabetes and also provides a confidence level in its prediction.
