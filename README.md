@@ -5,7 +5,7 @@
 1. Files whose names end in `*_dgg` represent the **Diabetes General Guess** functionality that uses a Multi-Layer Perceptron (MLP) and 2 multi-participant diabetic information datasets to predict whether a user has diabetes and also provides a confidence level in its prediction.
 2. Files whose names end in `*_idg` represent the **Insulin Dosage Guess** functionality that uses a multi-input MLP and a single participant sequential diabetic information tracking dataset to predict and suggest the user's next insulin dosage. 
 
-# Section 1:
+# Section 1 - Diabetes Prediction:
 ## Learning Problem: 
 The purpose of this section of the project is to create a Machine Learning model that can predict whether you have diabetes or not and also give you the percentage of confidence that the prediction is accurate. It uses various information including: demographic information (gender, age, number of pregnancies), physical measurements (BMI, blood pressure, skin thickness), lab measurements (blood glucose, HbA1c, insulin) and health history (hypertension, heart disease, smoking status) to help make the predictions. The model was trained using 2 datasets taken from Kaggle and uses a sequence of linear and ReLu layers to help conduct a binary classification of whether a user has diabetes. The model also uses the PyTorch Lightning module and the Adam optimizer to help improve the model's performance.
 
@@ -20,7 +20,7 @@ Early detection of diabetes is crucial as it allows for the initiation of long-t
 ### Data Processing:
 The two datasets were merged after comparing and matching shared feature column names. Missing values were handled by substituting median values into the missing columns allowing for maintenance of a large sample size. In order to help with model functionality, continuous features were also standardized and categorical fields were encoded to numerical representations.
 
-# Section 2:
+# Section 2 - Insulin Prediction:
 ## Learning Problem: 
 The purpose of this section of the project is to create a Machine Learning model that can predict the amount of insulin a person should administer at a given time based on their recent glucose levels, carbohydrate intake, and other relevant health factors. The model uses various types of information, including time of day, blood glucose readings, carbohydrate consumption, previous insulin doses, and meal events to provide a personalized insulin recommendation. The model is trained using a dataset derived from real user insulin and diabetes logs, which has been preprocessed and structured as time-series sequences. It uses MLP architecture with linear and ReLU layers to learn complex relationships between the input features and the target insulin amount. The model also uses the PyTorch Lightning module and the Adam optimizer to help improve the model's performance. 
 
