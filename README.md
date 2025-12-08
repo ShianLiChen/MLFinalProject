@@ -1,6 +1,10 @@
 # CSCI 4050 - ML Final Project (ID: Group 16)
 ## By: Li Chen (100813628) &
 
+# Sections:
+1. Files whose names end in `*_dgg` represent the **Diabetes General Guess** functionality that uses a Multi-Layer Perceptron (MLP) and 2 multi-participant diabetic information datasets to predict whether a user has diabetes and also provides a confidence level in its prediction.
+2. Files whose names end in `*_idg` represent the **Insulin Dosage Guess** functionality that uses a multi-input MLP and a single participant sequential diabetic information tracking dataset to predict and suggest the user's next insulin dosage. 
+
 # Learning Problem: 
 The purpose of this project is to create a Machine Learning model that can predict whether you have diabetes or not and also give you the percentage of confidence that the prediction is accurate. It uses various information including: demographic information (gender, age, number of pregnancies), physical measurements (BMI, blood pressure, skin thickness), lab measurements (blood glucose, HbA1c, insulin) and health history (hypertension, heart disease, smoking status) to help make the predictions. The model was trained using 2 datasets taken from Kaggle and uses a sequence of linear and ReLu layers to help conduct a binary classification of whether a user has diabetes. The model also uses the PyTorch Lightning module and the Adam optimizer to help improve the model's performance.
 

@@ -112,8 +112,8 @@ def load_data(batch_size=32, val_ratio=0.2, random_seed=42):
     # Save mean and std for inference
     scaler_dir = os.path.join(base_dir, "saved_model")
     os.makedirs(scaler_dir, exist_ok=True)
-    np.save(os.path.join(scaler_dir, "mean.npy"), mean)
-    np.save(os.path.join(scaler_dir, "scale.npy"), std)
+    np.save(os.path.join(scaler_dir, "mean_dgg.npy"), mean)
+    np.save(os.path.join(scaler_dir, "scale_dgg.npy"), std)
 
     # Convert to PyTorch tensors
     X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)

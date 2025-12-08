@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SCALER_DIR = os.path.join(BASE_DIR, "..", "saved_model")
 
 # Load means
-mean = np.load(os.path.join(SCALER_DIR, "mean.npy"))
+mean = np.load(os.path.join(SCALER_DIR, "mean_dgg.npy"))
 # Map features in the same order as your model expects
 FEATURE_ORDER = [
     "Pregnancies", "blood_glucose_level", "BloodPressure", "SkinThickness", "Insulin",

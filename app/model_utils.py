@@ -4,16 +4,16 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))) 
 
-from src.model.model import DiabetesModel
+from src.model.model_dgg import DiabetesModel
 
 # Load scaler values
-mean = np.load("saved_model/mean.npy")
-scale = np.load("saved_model/scale.npy")
+mean = np.load("saved_model/mean_dgg.npy")
+scale = np.load("saved_model/scale_dgg.npy")
 
 # Load model
 input_size = len(mean)  # 15 features
 model = DiabetesModel(input_size=input_size)
-model.load_state_dict(torch.load("saved_model/model.pt", map_location=torch.device("cpu")))
+model.load_state_dict(torch.load("saved_model/model_dgg.pt", map_location=torch.device("cpu")))
 model.eval()
 
 # Define feature order exactly as in training

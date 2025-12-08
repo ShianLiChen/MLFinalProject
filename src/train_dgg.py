@@ -1,8 +1,8 @@
 import torch
 import lightning as L
 from lightning.pytorch.callbacks import EarlyStopping
-from src.data.clean_data import load_data
-from src.model.model import DiabetesModel
+from src.data.clean_data_dgg import load_data
+from src.model.model_dgg import DiabetesModel
 from torchinfo import summary
 import os
 
@@ -42,7 +42,7 @@ def main():
     # Save the trained model
     saved_model_dir = os.path.join("saved_model")
     os.makedirs(saved_model_dir, exist_ok=True)
-    torch.save(model.state_dict(), os.path.join(saved_model_dir, "model.pt"))
+    torch.save(model.state_dict(), os.path.join(saved_model_dir, "model_dgg.pt"))
 
     # Evaluate final accuracy
     model.eval()
