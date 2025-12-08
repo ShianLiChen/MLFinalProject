@@ -26,8 +26,8 @@ def main():
     # Load cleaned dataset from data/raw
     df: pd.DataFrame = pd.read_csv(input_csv, parse_dates=["dateTime"])
 
-    # Split dataset 50/50 for training/testing
-    split_idx = int(len(df) * 0.5)
+    # Split dataset 80/20 for training/testing
+    split_idx = int(len(df) * 0.8)
 
     train_df = model.InsulinDataset(df.iloc[:split_idx])
     test_df  = model.InsulinDataset(df.iloc[split_idx:])
